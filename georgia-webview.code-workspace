@@ -1,0 +1,11 @@
+{
+    "folders": [
+        {
+            "path": "."
+        },
+        {
+            "path": "../foobar2000_v24p/profile/foo_uie_webview"
+        }
+    ],
+    "settings": {}
+}

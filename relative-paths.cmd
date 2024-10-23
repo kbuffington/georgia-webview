@@ -1,0 +1,1 @@
+powershell -executionpolicy remotesigned -File "relative-paths.ps1"
