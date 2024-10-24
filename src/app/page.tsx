@@ -13,6 +13,10 @@ export default function Home() {
 
     useEffect(() => {
         refresh();
+        Foobar.deferredSubscribe();
+        return () => {
+            Foobar.unsubscribe();
+        };
     }, []);
 
     const refresh = () => {

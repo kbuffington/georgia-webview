@@ -1,47 +1,80 @@
 console.log('listeners.js loaded');
 
+class FbEventEmitter {
+    constructor() {
+        this.events = {};
+    }
+
+    subscribe(eventName, callback, id) {
+        if (!this.events[eventName]) {
+            this.events[eventName] = [];
+        }
+        this.events[eventName].push({ callback, id });
+    }
+
+    emit(eventName, ...args) {
+        if (this.events[eventName]) {
+            this.events[eventName].forEach(listener => listener.callback(...args));
+        }
+    }
+
+    unsubscribe(eventName, id) {
+        if (this.events[eventName]) {
+            this.events[eventName] = this.events[eventName].filter(listener => listener.id !== id);
+        }
+    }
+}
+
+// global fbEventEmitter that components can subscribe to
+window.fbEventEmitter = new FbEventEmitter();
+
 /**
  * Will call window.FoobarHandlers.On<methodName> maybe?
  */
 
-function OnPlaybackStarting(command, paused) {}
+function OnPlaybackStarting(command, paused) {
+    fbEventEmitter.emit('onPlaybackStarting', command, paused);
+}
 
 function OnPlaybackNewTrack() {
-    console.log('onplaybacknewtrack');
+    fbEventEmitter.emit('onPlaybackNewTrack', {});
+}
 
 function OnPlaybackStop(reason) {
-    console.log('playback stopped', reason);
+    fbEventEmitter.emit('onPlaybackStop', reason);
 }
 
 // Called when the user seeks to a specific time.
 function OnPlaybackSeek(time) {
-    // document.getElementById("Time").textContent = time; // in seconds
+    fbEventEmitter.emit('onPlaybackSeek', time);
 }
 
 // Called when playback pauses or resumes.
 function OnPlaybackPause(paused) {
-    // document.getElementById("Paused").textContent = paused; // true / false
+    fbEventEmitter.emit('onPlaybackPause', paused);
 }
 
 // Called when the currently played file gets edited.
 function OnPlaybackEdited() {
-    // Refresh();
+    fbEventEmitter.emit('onPlaybackEdited');
 }
 
 // Called when dynamic info (VBR bitrate etc...) changes.
 function OnPlaybackDynamicInfo() {
-    // Refresh();
+    fbEventEmitter.emit('onPlaybackDynamicInfo');
 }
 
 // Called when the per-track dynamic info (stream track titles etc...) change. Happens less often than OnPlaybackDynamicInfo().
 function OnPlaybackDynamicTrackInfo() {
-    // Refresh();
+    fbEventEmitter.emit('onPlaybackDynamicTrackInfo');
 }
 
 // Called, every second, for time display.
 function OnPlaybackTime(time) {
+    fbEventEmitter.emit('onPlaybackTime', time);
 }
 
 // Called when the user changes the volume.
-function OnVolumeChange(newValue) {
+function OnVolumeChange(volume) {
+    fbEventEmitter.emit('onVolumeChange', volume);
 }
