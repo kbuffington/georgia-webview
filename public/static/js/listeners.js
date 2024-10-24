@@ -1,4 +1,4 @@
-console.log('listeners.js loaded');
+console.log('listeners.js loading');
 
 class FbEventEmitter {
     constructor() {
@@ -26,7 +26,9 @@ class FbEventEmitter {
 }
 
 // global fbEventEmitter that components can subscribe to
-window.fbEventEmitter = new FbEventEmitter();
+if (!window.fbEventEmitter) {
+    window.fbEventEmitter = new FbEventEmitter();
+}
 
 /**
  * Will call window.FoobarHandlers.On<methodName> maybe?

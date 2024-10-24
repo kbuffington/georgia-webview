@@ -15,7 +15,7 @@ export class FoobarClass {
     // listeners.js may load after this class is instantiated, so subscribe later
     public deferredSubscribe() {
         if (window.fbEventEmitter) {
-            console.log('found fbEventEmitter');
+            // console.log('found fbEventEmitter');
             window.fbEventEmitter.subscribe('onPlaybackStarting', this.onPlaybackStarting, this.id);
             window.fbEventEmitter.subscribe('onPlaybackNewTrack', this.onPlaybackNewTrack, this.id);
             window.fbEventEmitter.subscribe('onPlaybackStop', this.onPlaybackStop, this.id);
