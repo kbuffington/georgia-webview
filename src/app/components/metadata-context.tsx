@@ -55,6 +55,7 @@ const getMetadata = (): FoobarMetadata => {
     };
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const MetadataContext = createContext<MetadataInterface>({} as any);
 
 export const MetadataProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
