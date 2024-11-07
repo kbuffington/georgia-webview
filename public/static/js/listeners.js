@@ -1,4 +1,9 @@
-console.log('listeners.js loading');
+/**
+ * Note: When using hot reload during development, static js files such as this one will NOT reload.
+ * To get this file to refresh you must right-click in the proper WebView window and click reload
+ * */
+
+console.log('listeners.js loaded');
 
 class FbEventEmitter {
     constructor() {
@@ -79,3 +84,8 @@ function OnPlaybackTime(time) {
 function OnVolumeChange(volume) {
     window.fbEventEmitter.emit('onVolumeChange', volume);
 }
+
+// Called when the shared buffer does not exist yet or when the channel configuration changes.
+window.chrome.webview.addEventListener('sharedbufferreceived', evt => {
+    window.fbEventEmitter.emit('onSharedBufferReceived', evt);
+});

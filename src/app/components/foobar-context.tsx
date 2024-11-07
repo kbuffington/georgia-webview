@@ -1,8 +1,8 @@
 import { FoobarClass } from '@/lib/foobar';
-import { FoobarMetadata, MetadataContext } from '@/app/components/metadata-context';
+import { MetadataContext } from '@/app/components/metadata-context';
 import { FbWebView } from '@/types/globals';
 import { FoobarCallbacks } from '@/types/types';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect } from 'react';
 
 type PlayerState = {
     isPlaying: boolean;
@@ -58,13 +58,6 @@ const PlayerMethods = {
     //     return refresh();
     // },
 };
-
-const FoobarListeners = {
-    onPlaybackStarting: (command: string, paused: boolean) => {
-        console.log(' >>> onPlaybackStarting', command, paused);
-    },
-};
-
 type FoobarInterface = {
     // metadata: FoobarMetadata;
     playerState: PlayerState;
@@ -73,6 +66,7 @@ type FoobarInterface = {
     // listeners: FoobarListeners;
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const FoobarContext = React.createContext<FoobarInterface>({} as any);
 
 export const FoobarProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -88,7 +82,6 @@ export const FoobarProvider: React.FC<{ children: React.ReactNode }> = ({ childr
             console.log(' >>> onPlaybackStarting', command, paused);
         },
         onPlaybackNewTrack: () => {
-            console.log('here');
             refreshMetadata();
         },
         onPlaybackStop: (reason: string) => {
@@ -104,7 +97,7 @@ export const FoobarProvider: React.FC<{ children: React.ReactNode }> = ({ childr
             refreshMetadata();
         },
         onPlaybackDynamicInfo: () => {
-            console.log(' > onPlaybackDynamicInfo');
+            // console.log(' > onPlaybackDynamicInfo');
         },
         onPlaybackDynamicTrackInfo: () => {
             // console.log(' > onPlaybackDynamicTrackInfo');
@@ -115,9 +108,13 @@ export const FoobarProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         onVolumeChange: (volume: number) => {
             console.log(' > onVolumeChange', volume);
         },
-        // onSharedBufferReceived: (buffer) => {
-
-        // },
+        onSharedBufferReceived: evt => {
+            console.log(' > onSharedBufferReceived', evt);
+            if (window.fbSharedBuffer) {
+                window.chrome.webview.releaseBuffer(window.fbSharedBuffer);
+            }
+            window.fbSharedBuffer = evt.getBuffer();
+        },
     };
     initValues.foobar = new FoobarClass(foobarCallbacks);
 

@@ -1,3 +1,31 @@
+import { FbSharedBufferReceivedEvent } from './events';
+
+export type UieWebVew = {
+    CanSeek: boolean;
+    ComponentVersionText: string;
+    ComponentVersion: number;
+    Length: number;
+    Position: number;
+    IsMuted: boolean;
+    IsPlaying: boolean;
+    IsPaused: boolean;
+    StopAfterCurrent: boolean;
+    Volume: number;
+    GetFormattedText: (titleFormatString: string) => string;
+    Next: () => void;
+    Play: (val: boolean) => void;
+    Previous: () => void;
+    Random: () => void;
+    Seek: (time: number) => void;
+    SeekDelta: (delta: number) => void;
+    Stop: () => void;
+    ToggleMute: () => void;
+    TogglePause: () => void;
+    ToggleStopAfterCurrent: () => void;
+    VolumeDown: () => void;
+    VolumeUp: () => void;
+};
+
 export type FoobarCallbacks = {
     // Called when playback starts
     onPlaybackStarting: (command: string, paused: boolean) => void;
@@ -19,4 +47,6 @@ export type FoobarCallbacks = {
     onPlaybackTime: (time: number) => void;
     // Called when the user changes the volume.
     onVolumeChange: (volume: number) => void;
+    // Called when the shared buffer does not exist yet or when the channel configuration changes.
+    onSharedBufferReceived: (evt: FbSharedBufferReceivedEvent) => void;
 };

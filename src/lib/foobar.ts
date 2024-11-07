@@ -28,11 +28,15 @@ export class FoobarClass {
             );
             window.fbEventEmitter.subscribe('onPlaybackTime', this.callbacks.onPlaybackTime, this.id);
             window.fbEventEmitter.subscribe('onVolumeChange', this.callbacks.onVolumeChange, this.id);
+            window.fbEventEmitter.subscribe('onSharedBufferReceived', this.callbacks.onSharedBufferReceived, this.id);
         } else if (this.subscribeAttempts < 10) {
             this.subscribeAttempts++;
-            setTimeout(() => {
-                this.deferredSubscribe();
-            }, (this.subscribeAttempts - 1) * 100);
+            setTimeout(
+                () => {
+                    this.deferredSubscribe();
+                },
+                (this.subscribeAttempts - 1) * 100
+            );
         }
     }
 
@@ -48,5 +52,6 @@ export class FoobarClass {
         window.fbEventEmitter.unsubscribe('onPlaybackDynamicTrackInfo', this.id);
         window.fbEventEmitter.unsubscribe('onPlaybackTime', this.id);
         window.fbEventEmitter.unsubscribe('onVolumeChange', this.id);
+        window.fbEventEmitter.unsubscribe('onSharedBufferReceived', this.id);
     }
 }

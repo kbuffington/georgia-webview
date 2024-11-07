@@ -5,8 +5,11 @@ declare global {
         chrome: {
             webview: {
                 hostObjects: {
-                    sync: any;
+                    sync: {
+                        foo_uie_webview: UieWebVew;
+                    };
                 };
+                releaseBuffer: (buffer: ArrayBuffer) => void;
             };
         };
         fbEventEmitter: {
@@ -14,5 +17,6 @@ declare global {
             emit: (eventName, ...args) => {};
             unsubscribe: (eventName: string, id: number) => {};
         };
+        fbSharedBuffer: ArrayBuffer;
     }
 }
