@@ -25,58 +25,57 @@ class FbEventEmitter {
     }
 }
 
+// eslint-disable @typescript-eslint/no-unused-vars
+
 // global fbEventEmitter that components can subscribe to
 if (!window.fbEventEmitter) {
     window.fbEventEmitter = new FbEventEmitter();
 }
 
-/**
- * Will call window.FoobarHandlers.On<methodName> maybe?
- */
-
+/* eslint-disable @typescript-eslint/no-unused-vars */
 function OnPlaybackStarting(command, paused) {
-    fbEventEmitter.emit('onPlaybackStarting', command, paused);
+    window.fbEventEmitter.emit('onPlaybackStarting', command, paused);
 }
 
 function OnPlaybackNewTrack() {
-    fbEventEmitter.emit('onPlaybackNewTrack', {});
+    window.fbEventEmitter.emit('onPlaybackNewTrack', {});
 }
 
 function OnPlaybackStop(reason) {
-    fbEventEmitter.emit('onPlaybackStop', reason);
+    window.fbEventEmitter.emit('onPlaybackStop', reason);
 }
 
 // Called when the user seeks to a specific time.
 function OnPlaybackSeek(time) {
-    fbEventEmitter.emit('onPlaybackSeek', time);
+    window.fbEventEmitter.emit('onPlaybackSeek', time);
 }
 
 // Called when playback pauses or resumes.
 function OnPlaybackPause(paused) {
-    fbEventEmitter.emit('onPlaybackPause', paused);
+    window.fbEventEmitter.emit('onPlaybackPause', paused);
 }
 
 // Called when the currently played file gets edited.
 function OnPlaybackEdited() {
-    fbEventEmitter.emit('onPlaybackEdited');
+    window.fbEventEmitter.emit('onPlaybackEdited');
 }
 
 // Called when dynamic info (VBR bitrate etc...) changes.
 function OnPlaybackDynamicInfo() {
-    fbEventEmitter.emit('onPlaybackDynamicInfo');
+    window.fbEventEmitter.emit('onPlaybackDynamicInfo');
 }
 
 // Called when the per-track dynamic info (stream track titles etc...) change. Happens less often than OnPlaybackDynamicInfo().
 function OnPlaybackDynamicTrackInfo() {
-    fbEventEmitter.emit('onPlaybackDynamicTrackInfo');
+    window.fbEventEmitter.emit('onPlaybackDynamicTrackInfo');
 }
 
 // Called, every second, for time display.
 function OnPlaybackTime(time) {
-    fbEventEmitter.emit('onPlaybackTime', time);
+    window.fbEventEmitter.emit('onPlaybackTime', time);
 }
 
 // Called when the user changes the volume.
 function OnVolumeChange(volume) {
-    fbEventEmitter.emit('onVolumeChange', volume);
+    window.fbEventEmitter.emit('onVolumeChange', volume);
 }
