@@ -1,6 +1,8 @@
-import { FoobarMetadata, defaultMetadata, refreshMetadata } from '@/lib/metadata';
+import { FoobarClass } from '@/lib/foobar';
+import { FoobarMetadata, MetadataContext } from '@/app/components/metadata-context';
 import { FbWebView } from '@/types/globals';
-import React from 'react';
+import { FoobarCallbacks } from '@/types/types';
+import React, { useContext, useEffect, useState } from 'react';
 
 type PlayerState = {
     isPlaying: boolean;
@@ -52,24 +54,83 @@ const PlayerMethods = {
         FbWebView.ToggleStopAfterCurrent();
     },
     // non-FB methods
-    refreshMetadata: () => {
-        refreshMetadata();
+    // refreshMetadata: (): FoobarMetadata => {
+    //     return refresh();
+    // },
+};
+
+const FoobarListeners = {
+    onPlaybackStarting: (command: string, paused: boolean) => {
+        console.log(' >>> onPlaybackStarting', command, paused);
     },
 };
 
 type FoobarInterface = {
-    metadata: FoobarMetadata;
+    // metadata: FoobarMetadata;
     playerState: PlayerState;
     controls: typeof PlayerMethods;
+    foobar: FoobarClass;
+    // listeners: FoobarListeners;
 };
 
 export const FoobarContext = React.createContext<FoobarInterface>({} as any);
 
 export const FoobarProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-    const defaultValues: FoobarInterface = {
-        metadata: defaultMetadata,
+    const { refreshMetadata } = useContext(MetadataContext);
+    const initValues: FoobarInterface = {
         playerState: defaultPlayerState,
         controls: PlayerMethods,
+        foobar: {} as FoobarClass, // gets replaced below
     };
-    return <FoobarContext.Provider value={defaultValues}>{children}</FoobarContext.Provider>;
+
+    const foobarCallbacks: FoobarCallbacks = {
+        onPlaybackStarting: (command: string, paused: boolean) => {
+            console.log(' >>> onPlaybackStarting', command, paused);
+        },
+        onPlaybackNewTrack: () => {
+            console.log('here');
+            refreshMetadata();
+        },
+        onPlaybackStop: (reason: string) => {
+            refreshMetadata();
+        },
+        onPlaybackSeek: (time: number) => {
+            console.log(' > onPlaybackSeek', time);
+        },
+        onPlaybackPause: (paused: boolean) => {
+            console.log(' > onPlaybackPause', paused);
+        },
+        onPlaybackEdited: () => {
+            refreshMetadata();
+        },
+        onPlaybackDynamicInfo: () => {
+            console.log(' > onPlaybackDynamicInfo');
+        },
+        onPlaybackDynamicTrackInfo: () => {
+            // console.log(' > onPlaybackDynamicTrackInfo');
+        },
+        onPlaybackTime: (time: number) => {
+            // console.log(' > onPlaybackTime', time);
+        },
+        onVolumeChange: (volume: number) => {
+            console.log(' > onVolumeChange', volume);
+        },
+        // onSharedBufferReceived: (buffer) => {
+
+        // },
+    };
+    initValues.foobar = new FoobarClass(foobarCallbacks);
+
+    useEffect(() => {
+        // refresh();
+        initValues.foobar.deferredSubscribe();
+        return () => {
+            initValues.foobar.unsubscribe();
+        };
+    }, []);
+
+    // Foobar.onPlaybackNewTrack = () => {
+    //     defaultValues.controls.refreshMetadata();
+    // };
+    return <FoobarContext.Provider value={initValues}>{children}</FoobarContext.Provider>;
 };

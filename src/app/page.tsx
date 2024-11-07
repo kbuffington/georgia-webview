@@ -1,43 +1,24 @@
 'use client';
 
 import Script from 'next/script';
-import { Foobar } from '@/lib/foobar';
-import { defaultMetadata, refreshMetadata } from '@/lib/metadata';
 import Image from 'next/image';
-import { useEffect, useState } from 'react';
 import { FoobarProvider } from './components/foobar-context';
 import { TransportControls } from './components/transport';
+import { InfoDisplay } from './components/info-display';
+import { MetadataProvider } from './components/metadata-context';
 
 export default function Home() {
-    const [metadata, setMetadata] = useState(defaultMetadata);
-
-    useEffect(() => {
-        refresh();
-        Foobar.deferredSubscribe();
-        return () => {
-            Foobar.unsubscribe();
-        };
-    }, []);
-
-    const refresh = () => {
-        console.log('refreshing');
-        setMetadata(refreshMetadata());
-    };
-
     return (
         <>
             <Script src="/static/js/listeners.js" />
             <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
                 <div className="row-start-1 flex flex-col">
-                    <FoobarProvider>
-                        <span id="TrackTitle" className="track">
-                            {metadata.trackTitle}
-                        </span>
-                        <span id="Artist" className="track">
-                            {metadata.albumArtist}
-                        </span>
-                        <TransportControls></TransportControls>
-                    </FoobarProvider>
+                    <MetadataProvider>
+                        <FoobarProvider>
+                            <InfoDisplay></InfoDisplay>
+                            <TransportControls></TransportControls>
+                        </FoobarProvider>
+                    </MetadataProvider>
                 </div>
                 <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
                     {/* <Image
