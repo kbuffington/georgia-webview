@@ -18,5 +18,6 @@ declare global {
             unsubscribe: (eventName: string, id: number) => {};
         };
         fbSharedBuffer: ArrayBuffer;
+        fbAudioSamples: Float64Array;
     }
 }

@@ -8,6 +8,6 @@ export type FbSharedBufferReceivedEvent = {
         SampleRate: number;
     };
     timeStamp: number;
-    // sharedBuffer: ArrayBuffer; // probably don't want to expose this?
+    // sharedBuffer: ArrayBuffer; // this is only populated once getBuffer is called. Use the global window.fbSharedBuffer instead.
     // other standard event fields like source, currentTarget, etc.
 };

@@ -1,7 +1,7 @@
 import { FoobarClass } from '@/lib/foobar';
 import { MetadataContext } from '@/app/components/metadata-context';
 import { FbWebView } from '@/types/globals';
-import { FoobarCallbacks } from '@/types/types';
+import { FoobarCallbacks, StopReason } from '@/types/types';
 import React, { useContext, useEffect } from 'react';
 
 type PlayerState = {
@@ -84,8 +84,10 @@ export const FoobarProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         onPlaybackNewTrack: () => {
             refreshMetadata();
         },
-        onPlaybackStop: (reason: string) => {
-            refreshMetadata();
+        onPlaybackStop: (reason: StopReason) => {
+            if (reason !== StopReason.StartingAnother) {
+                refreshMetadata();
+            }
         },
         onPlaybackSeek: (time: number) => {
             console.log(' > onPlaybackSeek', time);
@@ -114,6 +116,7 @@ export const FoobarProvider: React.FC<{ children: React.ReactNode }> = ({ childr
                 window.chrome.webview.releaseBuffer(window.fbSharedBuffer);
             }
             window.fbSharedBuffer = evt.getBuffer();
+            window.fbAudioSamples = new Float64Array(window.fbSharedBuffer);
         },
     };
     initValues.foobar = new FoobarClass(foobarCallbacks);
