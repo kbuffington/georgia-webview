@@ -26,13 +26,25 @@ export type UieWebVew = {
     VolumeUp: () => void;
 };
 
+export const enum StopReason {
+    User = 'User',
+    StartingAnother = 'Starting another',
+    EOF = 'EOF',
+}
+
+export const enum PlaybackStartCommand {
+    Play = 'Play',
+    Next = 'Next',
+    Previous = 'Prev',
+}
+
 export type FoobarCallbacks = {
     // Called when playback starts
-    onPlaybackStarting: (command: string, paused: boolean) => void;
+    onPlaybackStarting: (command: PlaybackStartCommand, paused: boolean) => void;
     // Called when playing track changes
     onPlaybackNewTrack: () => void;
     // Called when playback stops
-    onPlaybackStop: (reason: string) => void;
+    onPlaybackStop: (reason: StopReason) => void;
     // Called when the user seeks to a specific time.
     onPlaybackSeek: (time: number) => void;
     // Called when playback pauses or resumes.

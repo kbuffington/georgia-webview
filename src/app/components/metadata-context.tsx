@@ -39,7 +39,7 @@ const getString = (tfString: string) => {
 };
 
 const getMetadata = (): FoobarMetadata => {
-    console.log(getString('%album%'));
+    console.log(getString('%title%'));
     return {
         album: getString('[%album%]'),
         albumArtist: getString('[%album artist%]'),
